@@ -49,7 +49,31 @@ YYJUI.Animate.prototype = {
 				YYJUI.AnimateQueue[that.ops.element].push(Base.extend({attr:data}, Base.filterJSON(that.ops, ["element","attributes"])));
 			}
 		})
-
-		console.log(YYJUI.AnimateQueue);
+	},
+	setAnimateData: function(type, data) {
+		var target = YYJUI.AnimateQueue[this.ops.element];
+		Base.each(target, function(json) {
+			json[type] = data;
+		})		
+	},
+	start: function(data) {
+		//设置动画属性的初始值
+		this.setAnimateData('beginData', data);
+	},
+	stop: function(data) {
+		this.setAnimateData('endData', data);
+		this.startAnimate();
+	},
+	startAnimate: function() {
+		var that = this;
+		var target = YYJUI.AnimateQueue[this.ops.element];
+		Base.each(target, function(animateData) {
+			that.getBeginData(animateData);
+		})
+	},
+	getBeginData: function(data) {
+		if(!data.beginData) {
+			this.calculateStyle(data.attr);
+		}
 	}
 }
