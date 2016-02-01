@@ -4,9 +4,9 @@ var YYJUI = {
 			if(name) {
 				if(navigator.userAgent.indexOf("MSIE 7.0") > 0 || navigator.userAgent.indexOf("MSIE 8.0") > 0) {
 					if(name.match("#")) {
-						return document.getElementByID(name.match(/#(\w+)/)[1]);
+						return document.getElementById(name.match(/#(\w+)/)[1]);
 					} else if(name.match(".")){
-						return document.getElementsByClassName(name.match(/#(\w+)/)[1]);
+						return document.getElementsByClassName(name.match(/.(\w+)/)[1]);
 					} else {
 						return document.geElementsByTagName(name);
 					}
