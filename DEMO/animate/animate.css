@@ -1,0 +1,33 @@
+body {
+	margin: 0px;
+}
+ul {
+	float:left;
+	width: 15%;
+	padding: 10px 0px 0px 10px;
+	list-style-type: none;
+	border-right: 1px solid #eaeaea;
+}
+ul li {
+	line-height: 30px;
+	height: 30px;
+	text-align: center;
+	border-bottom: 1px solid #eaeaea;
+}
+ul li a {
+	text-decoration: none;
+	color: #666;
+}
+ul li a.active {
+	color: #007aff;
+}
+div.content {
+	float: left;
+	padding: 30px;
+	width: 80%;
+}
+.content .box1 {
+	width: 200px;
+	height: 100px;
+	color: #ff6900;
+}
