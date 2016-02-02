@@ -33,6 +33,7 @@ YYJUI.Animate.prototype = {
 		!checkAnimateQueue(this.ops.element) && (YYJUI.AnimateQueue[this.ops.element] = []);
 		this.initAnimate();
 	},
+	
 	initAnimate: function() {
 		var that = this;
 		function checkAttr(attr) {
