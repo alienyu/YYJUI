@@ -2,7 +2,7 @@ $ = YYJUI.baseAPI.$;
 Base = YYJUI.baseAPI;
 YYJUI.AnimateQueue = {};
 YYJUI.AnimateProcessing = {};
-YYJUI:config = {
+YYJUI.config = {
 	queueNum:0
 }
 YYJUI.Animate = function(ops) {
@@ -33,6 +33,7 @@ YYJUI.Animate.prototype = {
 		!checkAnimateQueue(this.ops.element) && (YYJUI.AnimateQueue[this.ops.element] = []);
 		this.initAnimate();
 	},
+	
 	initAnimate: function() {
 		var that = this;
 		function checkAttr(attr) {
@@ -63,11 +64,13 @@ YYJUI.Animate.prototype = {
 	start: function(data) {
 		//设置动画属性的初始值
 		this.setAnimateData('beginData', data);
-		this.setAnimateData('status', 0);//初始化每个动画属性开始标志位
+		this.setAnimateData('status', 0);//初始化每个动画属性开始标志位\
+		return this;
 	},
 	stop: function(data) {
 		this.setAnimateData('endData', data);
 		this.startAnimate();
+		return this;
 	},
 	startAnimate: function() {
 		var that = this;
@@ -80,21 +83,21 @@ YYJUI.Animate.prototype = {
 	},
 	getBeginData: function(data) {
 		if(!data.beginData) {
-			this.calculateStyle(data.attr);
+			this.calculateStyle(data);
+		} else {
+			parseFloat(data.beginData);
 		}
 	},
-	calculateStyle: function(attr) {
+	calculateStyle: function(data) {
+		var attr = data.attr;
 		if(navigator.userAgent.indexOf("MSIE") > 0) {
-			this.beginData = $(this.ops.element)[0].currentStyle[attr].match(/\d+/);
+			data.beginData = parseFloat($(this.ops.element)[0].currentStyle[attr].match(/\d+/)[0]);
 		} else {
-			this.beginData = window.getComputedStyle($(this.ops.element)[0],null)[attr].match(/\d+/);
+			data.beginData = parseFloat(window.getComputedStyle($(this.ops.element)[0],null)[attr].match(/\d+/)[0]);
 		}
 	},
 	calculateAnimateData: function(data) {
 		var type = data.attr;
-		var difference = 0,
-			step = 0, //每帧动画的步长
-			direct = 1; //1表示递增，0表示递减
 		switch(type) {
 			case "color","background-color":
 				break;
@@ -103,7 +106,7 @@ YYJUI.Animate.prototype = {
 			default:
 				data.difference = parseInt((data.endData - data.beginData), 10);
 				data.direct = data.difference > 0 ? 1 : 0;
-				data.step = parseInt(difference / (data.duration / 50) ,10);
+				data.step = parseFloat(data.difference / (data.duration / 50));
 				break;
 		}
 	},
@@ -113,7 +116,7 @@ YYJUI.Animate.prototype = {
 	actAnaimate: function(target) {
 		var that = this;
 		YYJUI.AnimateProcessing[this.actName] = {};
-		this.actLength = this.ops.element.length;
+		this.actLength = this.ops.attributes.length;
 		YYJUI.AnimateProcessing[this.actName] = setInterval(function() {
 			if(that.actLength > 0) {
 				Base.each(target, function(eachTarget) {
@@ -129,6 +132,7 @@ YYJUI.Animate.prototype = {
 				})
 			} else {
 				clearInterval(YYJUI.AnimateProcessing[that.actName]);
+				that.ops.callback && that.ops.callback.call(this);
 			}
 		}, 50);
 	},
@@ -153,7 +157,7 @@ YYJUI.Animate.prototype = {
 					this.actLength --;
 				}
 			}
-			$(tar.element).style[attr] = tar.begin;
+			$(tar.element)[0].style[attr] = tar.beginData + "px";
 		}
 	}
 }
