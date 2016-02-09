@@ -26,3 +26,6 @@ div.content {
 	padding: 30px;
 	width: 80%;
 }
+.icon-cha:before {
+	content: "e6c3;";
+}
